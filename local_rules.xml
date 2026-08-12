@@ -1,0 +1,22 @@
+<group name="local,syslog,audit,">
+  <!--
+    Rule 100800 - Mass File Deletion / Data Destruction (T1485)
+    Used to detect a burst of file-deletion syscalls (unlink/unlinkat)
+    in a shorter window
+
+    KNOWN LIMITATIONS: Broad unlik/unlinkat auditing generates high-volume  events that SCATTERacross multiple 
+    parent rules depending on the deleting process. Much of the deletion volume is legitimate system/Wazuh activity.
+    This is why the rule does not reliably fire in testing.
+  -->
+  <rule id="100800" level="12" frequency="20" timeframe="10">
+    <if_matched_sid>80700</if_matched_sid>
+    <field name="audit.key">file_deletion</field>
+    <description>Possible data destruction: high volume of file deletion in a short time (mass deletion / wiper behavior)</description>
+    <mitre>
+      <id>T1485</id>
+    </mitre>
+    <group>impact,pci_dss_10.2.7,</group>
+  </rule>
+
+</group>
+  
